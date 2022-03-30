@@ -1,7 +1,6 @@
-const mongoose = requre('mongoose');
-const Schema = mongoose;
+const mongoose = require('mongoose');
 
-const shopSchema = new Schema({
+const shopSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Shop must have a Name']

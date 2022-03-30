@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose;
 
-const itemSchema = new Schema({
+const itemSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Item must have a Name!']
@@ -10,23 +9,18 @@ const itemSchema = new Schema({
         type: Date,
         default: Date.now()
     },
-    category: {
-        type: Schema.ObjectId,
+    category: [{
+        type: mongoose.Schema.ObjectId,
         ref: 'Category',
-        required: [true, 'Item must have a Categoty!']
-    },
+        required: [true, 'Item must have a Category!']
+    }],
     quantity: {
         type: Number,
         default: 1
     }
-});
-
-itemSchema.pre(/^find/, function(next) {
-    this.populate('category').populate({
-        path: 'category',
-        select: 'name'
-    });
-    next();
+},
+{
+    timestamps: {createdAt: 'created'}
 });
 
 const Item = mongoose.model('Item', itemSchema);

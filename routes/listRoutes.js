@@ -6,4 +6,7 @@ const router = express.Router();
 router.route('/')
     .get(listControler.getShoppingLists);
 
+router.route('/shopping-list')
+    .get(listControler.getList);
+
 module.exports = router;
