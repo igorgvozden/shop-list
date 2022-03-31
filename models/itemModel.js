@@ -3,20 +3,22 @@ const mongoose = require('mongoose');
 const itemSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'Item must have a Name!']
+        required: [true, 'Item must have a Name!'],
+        trim: true,
+        unique: true
     },
     created: {
         type: Date,
         default: Date.now()
     },
-    category: [{
+    category: {
         type: mongoose.Schema.ObjectId,
-        ref: 'Category',
-        required: [true, 'Item must have a Category!']
-    }],
+        ref: 'Category'
+    },
     quantity: {
         type: Number,
-        default: 1
+        default: 1,
+        min: [1, 'Quantity cannot be less than 1.']
     }
 },
 {

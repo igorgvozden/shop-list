@@ -1,4 +1,3 @@
-const { format } = require('express/lib/response');
 const mongoose = require('mongoose');
 
 const listSchema = new mongoose.Schema({
@@ -6,25 +5,28 @@ const listSchema = new mongoose.Schema({
         type: String,
         required: [true, 'List must have a Name']
     },
-    created : {
-        type: Date,
-        default: Date.now()
-    },
+    created : String,
     updated: String,
     items: [{
         type: mongoose.Schema.ObjectId,
         ref: 'Item'
     }],
-    shop: [{
-        type: mongoose.Schema.ObjectId,
+    shop: {
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Shop'
-    }]
+    }
 },
 {
     timestamps: {
         createdAt: 'created',
         updatedAt: 'updated'
     }
+});
+
+listSchema.pre(/find^/, function (next) {
+    this.populate('shop');
+    this.populate('items');
+    next();
 });
 
 const List = mongoose.model('List', listSchema);

@@ -1,7 +1,7 @@
 const Item = require('../models/itemModel');
 const errorHandler = require('../controllers/errorController');
 
-exports.getItems = async (req, res, next) => {
+const getAllItems = async (req, res, next) => {
     try {
         const items = await Item.find();
 
@@ -16,7 +16,53 @@ exports.getItems = async (req, res, next) => {
     };
 };
 
-exports.addItem = async (req, res, next) => {
+const getItem = async (req, res, next) => {
+    try {
+        const item = await Item.findById(req.params.id);
+
+        res.status(200).json({
+            status: 'Success',
+            data: {
+                item
+            }
+        });
+    } catch (error) {
+        next(errorHandler(error, req, res, next));
+    };
+};
+
+const updateItem = async (req, res, next) => {
+    try {
+        const item = await Item.findByIdAndUpdate(req.params.id, req.body, {
+            new: true, // returns updated objecct - default returns object before update
+            runValidators: true // runs validators defined in model
+        });
+
+        res.status(200).json({
+            status: 'Success',
+            data: {
+                item
+            }
+        });
+    } catch (error) {
+        next(errorHandler(error, req, res, next));
+    };
+};
+
+const deleteItem = async (req, res, next) => {
+    try {
+        await Item.findByIdAndDelete(req.params.id);
+
+        res.status(204).json({
+            status: 'Success',
+            data: null
+        });
+    } catch (error) {
+        next(errorHandler(error, req, res, next));
+    };
+};
+
+const addItem = async (req, res, next) => {
     try {
         const newItem = await Item.create(req.body);
 
@@ -31,3 +77,5 @@ exports.addItem = async (req, res, next) => {
         next(errorHandler(error, req, res, next));
     };
 };
+
+module.exports = { getItem, getAllItems, addItem, updateItem, deleteItem }

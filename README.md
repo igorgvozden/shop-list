@@ -13,21 +13,3 @@ In order to STOP the app process:
 7) Type > docker stop CONTAINER_NAME
 
 
-
-
-
-// API ENDPOINTS ///////////////////////////////////////////////////////////////////////////////
-
-// LISTS
-
-GET -All Data
-    127.0.0.1:3000/     //returns whole database
-
-GET -Default Shopping List
-    127.0.0.1:3000/shopping-list  //returns main shopping list
-
-// CATEGORIES
-
-GET -All Categories
-    127.0.0.1:3000/categories   //returns all categories
-

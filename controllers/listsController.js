@@ -1,9 +1,9 @@
-const ListModel = require('../models/listModel');
+const List = require('../models/listModel');
 const errorHandler = require('./errorController');
 
-exports.getShoppingLists = async (req, res, next) => {
+const getShoppingLists = async (req, res, next) => {
     try {
-        const shoppingLists = await ListModel.find().populate({
+        const shoppingLists = await List.find().populate({
             path: 'shop'
         });
     
@@ -18,15 +18,33 @@ exports.getShoppingLists = async (req, res, next) => {
     };
 };
 
-exports.getList = async (req, res, next) => {
+const getList = async (req, res, next) => {
     try {
-        const shoppingList = await ListModel.findOne({name: 'Weekend Shopping'}).populate(['shop', {path: 'shop'}]);
-        console.log(shoppingList)
+        const query = await List.find({name: 'List'});
+
         res.status(200).json({
             status: 'Success',
-            data: shoppingList
+            data: query
         });
     } catch (error) {
         next(errorHandler(error, req, res, next));
     };
 };
+
+const addList = async (req, res, next) => {
+    try {
+        const newList = await List.create(req.body);
+
+        res.status(201).json({
+            status: 'Success',
+            message: 'New List created',
+            data: {
+                newList
+            }
+        });
+    } catch (error) {
+        next(errorHandler(error, req, res, next));
+    };
+};
+
+module.exports = { getShoppingLists, getList, addList }
