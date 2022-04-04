@@ -81,31 +81,39 @@ const errorHandler = require('../controllers/errorController');
 //////////////////// CHANGED CONTROLLER //////////////////////////
 const getAllItems = async () => {
     try {
-        const allItems = await Item.find();
+        const allItems = await Item.find()
+            .populate({ path: 'category' });
 
         return {
             status: 'Success',
             allItems
         };
     } catch (error) {
-        return error;
+        return {
+            status: 'Error',
+            message: `Something went wrong! Try Again : ${error.message}`
+        };
     };
 };
 
 const getItem = async (id) => {
     try {
-        const item = await Item.findById(id);
+        const item = await Item.findById(id)
+            .populate({ path: 'category' });
 
         return {
             status: 'Success',
             item
         };
     } catch (error) {
-        return error;
+        return {
+            status: 'Error',
+            message: `Something went wrong! Try Again : ${error.message}`
+        };
     };
 };
 
-const addItem = async () => {
+const addItem = async (body) => {
     try {
         const newItem = await Item.create(body);
 
@@ -115,7 +123,10 @@ const addItem = async () => {
             newItem
         };
     } catch (error) {
-       return error;
+        return {
+            status: 'Error',
+            message: `Something went wrong! Try Again : ${error.message}`
+        };
     };
 };
 
@@ -132,7 +143,10 @@ const updateItem = async (id, body) => {
             item
         };
     } catch (error) {
-        return error;
+        return {
+            status: 'Error',
+            message: `Something went wrong! Try Again : ${error.message}`
+        };
     };
 };
 
@@ -146,7 +160,10 @@ const deleteItem = async (id) => {
             data: null
         };
     } catch (error) {
-        return error;
+        return {
+            status: 'Error',
+            message: `Something went wrong! Try Again : ${error.message}`
+        };
     };
 };
 

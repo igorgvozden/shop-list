@@ -5,7 +5,7 @@ const itemSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Item must have a Name!'],
         trim: true,
-        unique: true
+        unique: [true, 'This Iteam already exists']
     },
     created: {
         type: Date,

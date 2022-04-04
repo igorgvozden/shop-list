@@ -1,6 +1,7 @@
 const Category = require('../models/categoryModel');
 const errorHandler = require('./errorController');
 
+
 // exports.getCategories = async (req, res, next) => {
 //     try {
 //         const categories = await Category.find();
@@ -38,10 +39,14 @@ const getCategories = async () => {
 
         return {
             status: 'Success',
-            categories
+            data: { categories }
         }
     } catch (error) {
-        return error;
+        return {
+            status: 'Error',
+            message: error.message,
+            data: { error }
+        }; 
     };
 };
 
@@ -52,10 +57,14 @@ const addCategory = async (body) => {
         return {
             status: 'Success',
             message: 'New Category added!',
-            newCategory
+            data: { newCategory }
         }
-    } catch (error) {
-        return error;
+    } catch (error) {   
+        return {
+            status: 'Error',
+            message: error.message,
+            data: { error }
+        };   
     };
 };
 

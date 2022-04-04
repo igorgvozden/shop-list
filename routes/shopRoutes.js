@@ -14,9 +14,7 @@ router.get('/', async(req, res, next) => {
     try {
         const response = await shopsController.getShops();
 
-        res.status(200).json({
-            response
-        });
+        response.status === 'Success' ? res.status(200).json({ response }) : res.status(400).json({ response });
     } catch (error) {
         next(errorHandler(error, req, res, next));
     }
@@ -24,9 +22,9 @@ router.get('/', async(req, res, next) => {
 
 router.post('/', async(req, res, next) => {
     try {
-        const newShop = await shopsController.addShop(req.body);
+        const response = await shopsController.addShop(req.body);
 
-        res.status(201).json({ newShop });
+        response.status === 'Success' ? res.status(201).json({ response }) : res.status(400).json({ response });
     } catch (error) {
         next(errorHandler(error, req, res, next))
     };

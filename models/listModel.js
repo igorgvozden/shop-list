@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const listSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'List must have a Name']
+        required: [true, 'List must have a Name'],
+        unique: [true, 'List Name already exists! Choose different name.']
     },
     created : String,
     updated: String,
@@ -25,7 +26,7 @@ const listSchema = new mongoose.Schema({
 
 listSchema.pre(/find^/, function (next) {
     this.populate('shop');
-    this.populate('items');
+    this.populate('items').populate({ path: 'category' })
     next();
 });
 

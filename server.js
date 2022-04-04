@@ -2,6 +2,8 @@ const express = require('express');
 const dotenv = require('dotenv');
 dotenv.config({path: './config.env'});
 
+const errorHandler = require('./controllers/errorController');
+
 // mongoDB database connection
 const mongoose = require('mongoose');
 
@@ -41,6 +43,14 @@ process.on('uncaughtException', err => {
 
 // MIDDLEWARES
 app.use(express.json());
+const validator = require('./utils/validateReq');
+
+// check for htpp method, and runs validator if user is trying to POST or PATCH
+const logger = (req, res, next) => {
+    console.log(req.method);
+    next();
+};
+// app.use(logger);
 
 // ROUTES
 const listRouter = require('./routes/listRoutes');
@@ -52,7 +62,6 @@ app.use('/items', itemRouter);
 app.use('/shops', shopRouter);
 app.use('/categories', categoryRouter);
 app.use('/', listRouter);
-
 
 app.all('*', (req, res, next) => {
     next(new Error(`Invalid Address: ${req.originalUrl}`));

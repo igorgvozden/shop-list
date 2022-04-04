@@ -38,10 +38,13 @@ const getShops = async () => {
 
         return {
             status: 'Success',
-            shops
+            data: { shops }
         }
     } catch (error) {
-        return error;
+        return {
+            status: 'Error',
+            data: { error }
+        }
     };
 };
 
@@ -52,10 +55,13 @@ const addShop = async(body) => {
         return {
             status: 'Success',
             message: 'New Shop Created!',
-            newShop
+            data : { newShop }
         };
     } catch (error) {
-        return error;
+        return {
+            status: 'Error',
+            data: { error }
+        }
     };
 };
 
