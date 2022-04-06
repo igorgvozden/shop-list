@@ -4,7 +4,8 @@ const listSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'List must have a Name'],
-        unique: [true, 'List Name already exists! Choose different name.']
+        unique: [true, 'List Name already exists! Choose different name.'],
+        trim: true
     },
     created : String,
     updated: String,

@@ -7,18 +7,19 @@ const errorHandler = require('./controllers/errorController');
 // mongoDB database connection
 const mongoose = require('mongoose');
 
-// const database = process.env.DATABASE.replace('<PASSWORD>', process.env.PASSWORD);
-const database = process.env.LOCAL_DB;
+// const database = process.env.DATABASE.replace('<PASSWORD>', process.env.PASSWORD); //atlas
+// const database = process.env.LOCAL_DB;                                             //local DB
+const database = process.env.DOCKER_DATABASE;                                         //dockerized local DB
 mongoose.connect(database)
     .then(connection => {
-    // console.log(connection.connections);
+    console.log(connection.connections);
     console.log('Database connected! ...');
 });
 ///////
 
 // RUN THE SERVER
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 const server = app.listen(port, () => {
     console.log(`App is running at ${port}`);
 });

@@ -1,6 +1,7 @@
 const express = require('express');
 const itemController = require('../controllers/itemController');
 const errorHandler = require('../controllers/errorController');
+const validator = require('../utils/validateReq');
 
 const router = express.Router();
 
@@ -36,7 +37,7 @@ router.get('/:id', async(req, res, next) => {
     };
 });
 
-router.post('/', async(req, res, next) => {
+router.post('/', [...validator.validateItem], async(req, res, next) => {
     try {
         const response = await itemController.addItem(req.body);
 

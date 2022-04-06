@@ -1,5 +1,6 @@
 const express = require('express');
 const listControler = require('../controllers/listsController');
+const validator = require('../utils/validateReq');
 
 const router = express.Router();
 
@@ -34,7 +35,7 @@ router.get('/shopping-list', async(req, res, next) => {
     };
 });
 
-router.post('/', async(req, res, next) => {
+router.post('/', [...validator.validateList], async(req, res, next) => {
     try {
         const response = await listControler.addList(req.body);
         

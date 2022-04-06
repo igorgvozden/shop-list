@@ -25,15 +25,42 @@ const validateCategory = [
 ];
 
 const validateItem = [
-    
+    body('name')
+        .exists()
+        .isAlphanumeric().withMessage('Name should be alphanumeric!')
+        .isLength({min: 1 , max: 15}).withMessage('Name should not be empty, should be more than one and less than 15 characters')
+        .trim(),
+        returnValidationResult
 ];
 
 const validateShop = [
-
+    body('name')
+        .exists()
+        .isAlphanumeric().withMessage('Name should be alphanumeric!')
+        .isLength({min: 1 , max: 15}).withMessage('Name should not be empty, should be more than one and less than 15 characters')
+        .trim(),
+        returnValidationResult,
+        ////////////////////////////
+    body('address')
+        .exists()
+        .isLength({min: 5 , max: 50}).withMessage('Address should not be empty. It should contain Street name and a number.')
+        .trim(),
+        returnValidationResult,
+        ///////////////////////////
+    body('city')
+        .exists()
+        .isLength({min: 1 , max: 20}).withMessage('City should not be empty!')
+        .trim(),
+        returnValidationResult
 ];
 
 const validateList = [
-
+    body('name')
+        .exists()
+        .isAlphanumeric().withMessage('Name should be alphanumeric!')
+        .isLength({min: 1 , max: 15}).withMessage('Name should not be empty, should be more than one and less than 15 characters')
+        .trim(),
+        returnValidationResult,
 ];
 
 module.exports = { validateCategory, validateShop, validateItem, validateList };

@@ -1,6 +1,7 @@
 const express = require('express');
 const shopsController = require('../controllers/shopsController');
 const errorHandler = require('../controllers/errorController');
+const validator = require('../utils/validateReq');
 
 const router = express.Router();
 
@@ -20,7 +21,7 @@ router.get('/', async(req, res, next) => {
     }
 });
 
-router.post('/', async(req, res, next) => {
+router.post('/', [...validator.validateShop], async(req, res, next) => {
     try {
         const response = await shopsController.addShop(req.body);
 
