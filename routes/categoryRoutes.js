@@ -1,8 +1,6 @@
 const express = require('express');
 const categoriesController = require('../controllers/categoriesController');
-const errorHandler = require('../controllers/errorController');
 const validator = require('../utils/validateReq');
-
 const router = express.Router();
 
 // router.route('/')
@@ -15,9 +13,10 @@ router.get('/', async(req, res, next) => {
     try {
         const response = await categoriesController.getCategories();
         
-        response.status === 'Success' ? res.status(201).json({ response }) : res.status(400).json({ response });
+        res.status(200).json({ response });
     } catch (error) {
-        next(errorHandler(error, req, res, next));
+        next(error);
+        // next(new AppError(error.message, 400));
     }
 });
 
@@ -25,9 +24,10 @@ router.post('/', [...validator.validateCategory], async(req, res, next) => {
     try {
         const response = await categoriesController.addCategory(req.body);
         
-        response.status === 'Success' ? res.status(201).json({ response }) : res.status(400).json({ response });
+        res.status(201).json({ response });
     } catch (error) {
-        next(errorHandler(error, req, res, next));
+        next(error);
+        // next(new AppError(error.message, 400));
     };
 });
 

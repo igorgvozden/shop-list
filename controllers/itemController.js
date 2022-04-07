@@ -1,82 +1,5 @@
 const Item = require('../models/itemModel');
-const errorHandler = require('../controllers/errorController');
-
-// const getAllItems = async (req, res, next) => {
-//     try {
-//         const items = await Item.find();
-
-//         res.status(200).json({
-//             status: 'Success',
-//             data: {
-//                 items
-//             }
-//         });
-//     } catch (error) {
-//         next(errorHandler(error, req, res, next));
-//     };
-// };
-
-// const getItem = async (req, res, next) => {
-//     try {
-//         const item = await Item.findById(req.params.id);
-
-//         res.status(200).json({
-//             status: 'Success',
-//             data: {
-//                 item
-//             }
-//         });
-//     } catch (error) {
-//         next(errorHandler(error, req, res, next));
-//     };
-// };
-
-// const updateItem = async (req, res, next) => {
-//     try {
-//         const item = await Item.findByIdAndUpdate(req.params.id, req.body, {
-//             new: true, // returns updated object - default returns object before update
-//             runValidators: true // runs validators defined in model
-//         });
-
-//         res.status(200).json({
-//             status: 'Success',
-//             data: {
-//                 item
-//             }
-//         });
-//     } catch (error) {
-//         next(errorHandler(error, req, res, next));
-//     };
-// };
-
-// const deleteItem = async (req, res, next) => {
-//     try {
-//         await Item.findByIdAndDelete(req.params.id);
-
-//         res.status(204).json({
-//             status: 'Success',
-//             data: null
-//         });
-//     } catch (error) {
-//         next(errorHandler(error, req, res, next));
-//     };
-// };
-
-// const addItem = async (req, res, next) => {
-//     try {
-//         const newItem = await Item.create(req.body);
-
-//         res.status(201).json({
-//             status: 'Success',
-//             message: 'New Item created!',
-//             data: {
-//                 newItem
-//             }
-//         });
-//     } catch (error) {
-//         next(errorHandler(error, req, res, next));
-//     };
-// };
+const AppError = require('../utils/appError');
 
 //////////////////// CHANGED CONTROLLER //////////////////////////
 const getAllItems = async () => {
@@ -86,13 +9,12 @@ const getAllItems = async () => {
 
         return {
             status: 'Success',
-            allItems
+            data: {
+                allItems
+            }
         };
     } catch (error) {
-        return {
-            status: 'Error',
-            message: `Something went wrong! Try Again : ${error.message}`
-        };
+        throw new AppError(`Ooops! ${error.message}`, 400);
     };
 };
 
@@ -101,15 +23,16 @@ const getItem = async (id) => {
         const item = await Item.findById(id)
             .populate({ path: 'category' });
 
+            if (!item) throw new AppError('This Item does not exist', 404);
+
         return {
             status: 'Success',
-            item
+            data: {
+                item
+            }
         };
     } catch (error) {
-        return {
-            status: 'Error',
-            message: `Something went wrong! Try Again : ${error.message}`
-        };
+        throw new AppError(`Ooops! ${error.message}`, error.statusCode || 400);
     };
 };
 
@@ -120,13 +43,12 @@ const addItem = async (body) => {
         return {
             status: 'Success',
             message: 'New Item created!',
-            newItem
+            data: {
+                newItem
+            }
         };
     } catch (error) {
-        return {
-            status: 'Error',
-            message: `Something went wrong! Try Again : ${error.message}`
-        };
+        throw new AppError(`${error.message.startsWith('E11000')? 'Item already exists!' : error.message}`, 400);
     };
 };
 
@@ -140,13 +62,12 @@ const updateItem = async (id, body) => {
         return {
             status: 'Success',
             message: 'Item Updated!',
-            item
+            data: {
+                item
+            }
         };
     } catch (error) {
-        return {
-            status: 'Error',
-            message: `Something went wrong! Try Again : ${error.message}`
-        };
+        throw new AppError(`Ooops! ${error.message}`, 400);
     };
 };
 
@@ -160,10 +81,7 @@ const deleteItem = async (id) => {
             data: null
         };
     } catch (error) {
-        return {
-            status: 'Error',
-            message: `Something went wrong! Try Again : ${error.message}`
-        };
+        throw new AppError(`Ooops! ${error.message}`, 400);
     };
 };
 

@@ -1,64 +1,5 @@
 const List = require('../models/listModel');
-const errorHandler = require('./errorController');
-
-// const getShoppingLists = async (req, res, next) => {
-//     try {
-//         const shoppingLists = await List.find().populate({
-//             path: 'shop'
-//         });
-    
-//         res.status(200).json({
-//             status: 'Success',
-//             data: {
-//                 shoppingLists
-//             }
-//         });
-//     } catch (error) {
-//         return {
-//             status: 'Error',
-//             message: error.message,
-//             data: { error }
-//         }; 
-//     };
-// };
-
-// const getList = async (req, res, next) => {
-//     try {
-//         const query = await List.find({name: 'List'});
-
-//         res.status(200).json({
-//             status: 'Success',
-//             data: query
-//         });
-//     } catch (error) {
-//         return {
-//             status: 'Error',
-//             message: error.message,
-//             data: { error }
-//         }; 
-//     };
-// };
-
-// const addList = async (req, res, next) => {
-//     try {
-//         const newList = await List.create(req.body);
-
-//         res.status(201).json({
-//             status: 'Success',
-//             message: 'New List created',
-//             data: {
-//                 newList
-//             }
-//         });
-//     } catch (error) {
-//         return {
-//             status: 'Error',
-//             message: error.message,
-//             data: { error }
-//         }; 
-//     };
-// };
-
+const AppError = require('../utils/appError');
 
 //////////////////// CHANGED CONTROLLER //////////////////////////
 const getShoppingLists = async() => {
@@ -72,11 +13,7 @@ const getShoppingLists = async() => {
             data: { response }
         }
     } catch (error) {
-        return {
-            status: 'Error',
-            message: error.message,
-            data: { error }
-        };
+        throw new AppError(`Ooops! ${error.message}`, 400);
     };
 };
 
@@ -91,11 +28,7 @@ const getList = async () => {
             data: { shoppingList }
         };
     } catch (error) {
-        return {
-            status: 'Error',
-            message: error.message,
-            data: { error }
-        }; 
+        throw new AppError(`Ooops! ${error.message}`, 400); 
     };
 };
 
@@ -111,18 +44,17 @@ const addList = async (body) => {
             }
         };
     } catch (error) {
-        return {
-            status: 'Error',
-            message: error.message,
-            data: { error }
-        }; 
+        throw new AppError(`${error.message.startsWith('E11000')? 'List Name already exists!' : error.message}`, 400);
     };
 };
 
 const addItemToList = async (listName, itemId) => {
     try {
-        const list = await List.findOne({listName});
+        const list = await List.findOne({'name': listName});
         
+        if(!list) throw new AppError(`List: ${listName}, Does not exist`, 404);
+        if(!itemId) throw new AppError(`Which Item would You like to add?`, 400);
+
         await list.items.push(itemId);
         await list.save();
 
@@ -131,17 +63,16 @@ const addItemToList = async (listName, itemId) => {
             data: { list }
         };   
     } catch (error) {
-        return {
-            status: 'Error',
-            message: error.message,
-            data: { error }
-        }; 
+        throw new AppError(`Ooops! ${error.message}`, error.statusCode || 400);  
     };
 };
 
 const removeItemFromList = async (listName, itemId) => {
     try {
-        const list = await List.findOne({name: listName});
+        const list = await List.findOne({'name': listName});
+
+        if(!list) throw new AppError(`List: ${listName}, Does not exist`, 404);
+        if(!itemId) throw new AppError(`Which Item would You like to remove?`, 400);
 
         await list.items.pull(itemId);
         await list.save();
@@ -152,11 +83,7 @@ const removeItemFromList = async (listName, itemId) => {
             data: null
         }; 
     } catch (error) {
-        return {
-            status: 'Error',
-            message: error.message,
-            data: { error }
-        }; 
+        throw new AppError(`Ooops! ${error.message}`, 400); 
     };
 };
 

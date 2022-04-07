@@ -4,7 +4,8 @@ const returnValidationResult = (req, res, next) => {
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+        const allErrors = errors.array().map(er => er.msg);
+        return res.status(400).json({ "status": "fail", "message": allErrors.join(' ... ') });
     };
     next();
 };
@@ -12,14 +13,13 @@ const returnValidationResult = (req, res, next) => {
 const validateCategory = [
     body('name')
         .exists()
-        .isAlphanumeric().withMessage('Name should be alphanumeric!')
-        .isLength({min: 1 , max: 15}).withMessage('Name should not be empty, should be more than one and less than 15 characters')
+        .isLength({min: 1 , max: 15}).withMessage('Name this Category. Give it a purpose e.g. Snacks')
         .trim(),
         returnValidationResult,
         ////////////////////////////
     body('description')
         .exists()
-        .isLength({min: 1 , max: 50}).withMessage('Description should not be empty, should be more than one and less than 50 characters')
+        .isLength({min: 1 , max: 50}).withMessage('Describe Category with no more than 50 characters')
         .trim(),
         returnValidationResult
 ];
@@ -27,8 +27,7 @@ const validateCategory = [
 const validateItem = [
     body('name')
         .exists()
-        .isAlphanumeric().withMessage('Name should be alphanumeric!')
-        .isLength({min: 1 , max: 15}).withMessage('Name should not be empty, should be more than one and less than 15 characters')
+        .isLength({min: 2 , max: 15}).withMessage('Name should not be empty, name it with at least 2 characters')
         .trim(),
         returnValidationResult
 ];
@@ -36,20 +35,19 @@ const validateItem = [
 const validateShop = [
     body('name')
         .exists()
-        .isAlphanumeric().withMessage('Name should be alphanumeric!')
-        .isLength({min: 1 , max: 15}).withMessage('Name should not be empty, should be more than one and less than 15 characters')
+        .isLength({min: 1 , max: 15}).withMessage('What is the name of the Shop?')
         .trim(),
         returnValidationResult,
         ////////////////////////////
     body('address')
         .exists()
-        .isLength({min: 5 , max: 50}).withMessage('Address should not be empty. It should contain Street name and a number.')
+        .isLength({min: 5 , max: 50}).withMessage('Address should have Street Name and a Parcel Number')
         .trim(),
         returnValidationResult,
         ///////////////////////////
     body('city')
         .exists()
-        .isLength({min: 1 , max: 20}).withMessage('City should not be empty!')
+        .isLength({min: 1 , max: 20}).withMessage('What City is your Shop located in?')
         .trim(),
         returnValidationResult
 ];
@@ -57,10 +55,9 @@ const validateShop = [
 const validateList = [
     body('name')
         .exists()
-        .isAlphanumeric().withMessage('Name should be alphanumeric!')
-        .isLength({min: 1 , max: 15}).withMessage('Name should not be empty, should be more than one and less than 15 characters')
+        .isLength({min: 2 , max: 15}).withMessage('Name your List with at least 2 and no more than 15 characters')
         .trim(),
-        returnValidationResult,
+        returnValidationResult
 ];
 
 module.exports = { validateCategory, validateShop, validateItem, validateList };

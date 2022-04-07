@@ -1,34 +1,5 @@
 const Shop = require('../models/shopModel');
-const errorHandler = require('./errorController');
-
-// exports.getShops = async (req, res, next) => {
-//     try {
-//         const shops = await Shop.find();
-
-//         res.status(200).json({
-//             status: 'Success',
-//             data: shops
-//         });
-//     } catch (error) {
-//         next(errorHandler(error, req, res, next));
-//     };
-// };
-
-// exports.addShop = async (req, res, next) => {
-//     try {
-//         const newShop = await Shop.create(req.body);
-
-//         res.status(200).json({
-//             status: 'Success',
-//             message: 'Shop created!',
-//             data: {
-//                 Shop: newShop
-//             }
-//         });
-//     } catch (error) {
-//         next(errorHandler(error, req, res, next));
-//     };
-// };
+const AppError = require('../utils/appError');
 
 //////////////////// CHANGED CONTROLLER //////////////////////////
 
@@ -41,10 +12,7 @@ const getShops = async () => {
             data: { shops }
         }
     } catch (error) {
-        return {
-            status: 'Error',
-            data: { error }
-        }
+        throw new AppError(`Ooops! ${error.message}`, 400);
     };
 };
 
@@ -58,10 +26,7 @@ const addShop = async(body) => {
             data : { newShop }
         };
     } catch (error) {
-        return {
-            status: 'Error',
-            data: { error }
-        }
+        throw new AppError(`${error.message.startsWith('E11000')? 'Shop already exists!' : error.message}`, 400);
     };
 };
 

@@ -3,16 +3,17 @@ const dotenv = require('dotenv');
 dotenv.config({path: './config.env'});
 
 const errorHandler = require('./controllers/errorController');
+const AppError = require('./utils/appError');
 
 // mongoDB database connection
 const mongoose = require('mongoose');
 
 // const database = process.env.DATABASE.replace('<PASSWORD>', process.env.PASSWORD); //atlas
-// const database = process.env.LOCAL_DB;                                             //local DB
-const database = process.env.DOCKER_DATABASE;                                         //dockerized local DB
+const database = process.env.LOCAL_DB;                                             //local DB
+// const database = process.env.DOCKER_DATABASE;                                         //dockerized local DB
 mongoose.connect(database)
     .then(connection => {
-    console.log(connection.connections);
+    // console.log(connection.connections);
     console.log('Database connected! ...');
 });
 ///////
@@ -44,14 +45,6 @@ process.on('uncaughtException', err => {
 
 // MIDDLEWARES
 app.use(express.json());
-const validator = require('./utils/validateReq');
-
-// check for htpp method, and runs validator if user is trying to POST or PATCH
-const logger = (req, res, next) => {
-    console.log(req.method);
-    next();
-};
-// app.use(logger);
 
 // ROUTES
 const listRouter = require('./routes/listRoutes');
@@ -65,5 +58,12 @@ app.use('/categories', categoryRouter);
 app.use('/', listRouter);
 
 app.all('*', (req, res, next) => {
-    next(new Error(`Invalid Address: ${req.originalUrl}`));
+    // const err = new Error(`Invalid Address: ${req.originalUrl}`);
+    // err.status = 'fail';
+    // err.statusCode = 404;
+    
+    next(new AppError(`Invalid Address: ${req.originalUrl}`, 404));
 });
+
+// error middleware
+app.use(errorHandler);

@@ -1,35 +1,5 @@
 const Category = require('../models/categoryModel');
-const errorHandler = require('./errorController');
-
-
-// exports.getCategories = async (req, res, next) => {
-//     try {
-//         const categories = await Category.find();
-
-//         res.status(200).json({
-//             status: 'Success',
-//             data: categories
-//         });
-//     } catch (error) {
-//         next(errorHandler(error, req, res, next));
-//     };
-// };
-
-// exports.addCategory = async (req, res, next) => {
-//     try {
-//         const newCategory = await Category.create(req.body);
-
-//         res.status(201).json({
-//             status: 'Success',
-//             message: 'Category created!',
-//             data: {
-//                 category: newCategory
-//             }
-//         });
-//     } catch (error) {
-//         next(errorHandler(error, req, res, next));
-//     };
-// };
+const AppError = require('../utils/appError');
 
 //////////////////// CHANGED CONTROLLER //////////////////////////
 
@@ -42,11 +12,7 @@ const getCategories = async () => {
             data: { categories }
         }
     } catch (error) {
-        return {
-            status: 'Error',
-            message: error.message,
-            data: { error }
-        }; 
+        throw new AppError(`Ooops! ${error.message}`, 400); 
     };
 };
 
@@ -59,14 +25,9 @@ const addCategory = async (body) => {
             message: 'New Category added!',
             data: { newCategory }
         }
-    } catch (error) {   
-        return {
-            status: 'Error',
-            message: error.message,
-            data: { error }
-        };   
+    } catch (error) {
+        throw new AppError(`${error.message.startsWith('E11000')? 'Category Name already exists!' : error.message}`, 400);
     };
 };
 
 module.exports = { getCategories, addCategory };
-//////////////////////////////////////////////////////////////////
