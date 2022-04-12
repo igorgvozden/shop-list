@@ -13,7 +13,7 @@ router.get('/', async(req, res, next) => {
     try {
         const response = await categoriesController.getCategories();
         
-        res.status(200).json({ response });
+        res.status(200).json( response );
     } catch (error) {
         next(error);
         // next(new AppError(error.message, 400));
@@ -24,7 +24,7 @@ router.post('/', [...validator.validateCategory], async(req, res, next) => {
     try {
         const response = await categoriesController.addCategory(req.body);
         
-        res.status(201).json({ response });
+        res.status(201).json( response );
     } catch (error) {
         next(error);
         // next(new AppError(error.message, 400));

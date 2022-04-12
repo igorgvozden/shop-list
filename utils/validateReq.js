@@ -5,7 +5,7 @@ const returnValidationResult = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const allErrors = errors.array().map(er => er.msg);
-        return res.status(400).json({ "status": "fail", "message": allErrors.join(' ... ') });
+        return res.status(400).json({ "message": allErrors.join(' ... ') });
     };
     next();
 };

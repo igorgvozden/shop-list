@@ -4,13 +4,12 @@ const AppError = require('../utils/appError');
 //////////////////// CHANGED CONTROLLER //////////////////////////
 const getShoppingLists = async() => {
     try {
-        const response = await List.find()
+        const lists = await List.find()
             .populate({ path: 'shop' })
             .populate({ path: 'items' });
 
         return {
-            status: 'Success',
-            data: { response }
+            lists
         }
     } catch (error) {
         throw new AppError(`Ooops! ${error.message}`, 400);
@@ -24,8 +23,7 @@ const getList = async () => {
             .populate({ path: 'items', populate: { path: 'category', model: 'Category' } })
 
         return {
-            status: 'Success',
-            data: { shoppingList }
+            shoppingList
         };
     } catch (error) {
         throw new AppError(`Ooops! ${error.message}`, 400); 
@@ -37,11 +35,7 @@ const addList = async (body) => {
         const newList = await List.create(body);
 
         return{
-            status: 'Success',
-            message: 'New List created',
-            data: {
-                newList
-            }
+            newList
         };
     } catch (error) {
         throw new AppError(`${error.message.startsWith('E11000')? 'List Name already exists!' : error.message}`, 400);
@@ -59,8 +53,7 @@ const addItemToList = async (listName, itemId) => {
         await list.save();
 
         return {
-            status: 'Success',
-            data: { list }
+            list
         };   
     } catch (error) {
         throw new AppError(`Ooops! ${error.message}`, error.statusCode || 400);  

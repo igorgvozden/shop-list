@@ -8,10 +8,7 @@ const getAllItems = async () => {
             .populate({ path: 'category' });
 
         return {
-            status: 'Success',
-            data: {
-                allItems
-            }
+            allItems
         };
     } catch (error) {
         throw new AppError(`Ooops! ${error.message}`, 400);
@@ -26,10 +23,7 @@ const getItem = async (id) => {
             if (!item) throw new AppError('This Item does not exist', 404);
 
         return {
-            status: 'Success',
-            data: {
-                item
-            }
+            item
         };
     } catch (error) {
         throw new AppError(`Ooops! ${error.message}`, error.statusCode || 400);
@@ -41,11 +35,7 @@ const addItem = async (body) => {
         const newItem = await Item.create(body);
 
         return {
-            status: 'Success',
-            message: 'New Item created!',
-            data: {
-                newItem
-            }
+            newItem
         };
     } catch (error) {
         throw new AppError(`${error.message.startsWith('E11000')? 'Item already exists!' : error.message}`, 400);
@@ -60,11 +50,7 @@ const updateItem = async (id, body) => {
         });
 
         return {
-            status: 'Success',
-            message: 'Item Updated!',
-            data: {
-                item
-            }
+            item
         };
     } catch (error) {
         throw new AppError(`Ooops! ${error.message}`, 400);

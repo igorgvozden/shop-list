@@ -8,8 +8,7 @@ const getShops = async () => {
         const shops = await Shop.find();
 
         return {
-            status: 'Success',
-            data: { shops }
+            shops
         }
     } catch (error) {
         throw new AppError(`Ooops! ${error.message}`, 400);
@@ -21,9 +20,7 @@ const addShop = async(body) => {
         const newShop = await Shop.create(body);
 
         return {
-            status: 'Success',
-            message: 'New Shop Created!',
-            data : { newShop }
+            newShop
         };
     } catch (error) {
         throw new AppError(`${error.message.startsWith('E11000')? 'Shop already exists!' : error.message}`, 400);

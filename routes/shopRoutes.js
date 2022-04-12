@@ -14,7 +14,7 @@ router.get('/', async(req, res, next) => {
     try {
         const response = await shopsController.getShops();
 
-        res.status(200).json({ response });
+        res.status(200).json( response );
     } catch (error) {
         next(error);
     }
@@ -24,7 +24,7 @@ router.post('/', [...validator.validateShop], async(req, res, next) => {
     try {
         const response = await shopsController.addShop(req.body);
 
-        res.status(201).json({ response });
+        res.status(201).json( response );
     } catch (error) {
         next(error);
     };
