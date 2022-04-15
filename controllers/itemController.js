@@ -4,11 +4,11 @@ const AppError = require('../utils/appError');
 //////////////////// CHANGED CONTROLLER //////////////////////////
 const getAllItems = async () => {
     try {
-        const allItems = await Item.find()
+        const items = await Item.find()
             .populate({ path: 'category' });
 
         return {
-            allItems
+            items
         };
     } catch (error) {
         throw new AppError(`Ooops! ${error.message}`, 400);

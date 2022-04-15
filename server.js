@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors');
 dotenv.config({path: './config.env'});
 
 const errorHandler = require('./controllers/errorController');
@@ -9,8 +10,8 @@ const AppError = require('./utils/appError');
 const mongoose = require('mongoose');
 
 // const database = process.env.DATABASE.replace('<PASSWORD>', process.env.PASSWORD); //atlas
-// const database = process.env.LOCAL_DB;                                             //local DB
-const database = process.env.DOCKER_DATABASE;                                         //dockerized local DB
+const database = process.env.LOCAL_DB;                                             //local DB
+// const database = process.env.DOCKER_DATABASE;                                         //dockerized local DB
 mongoose.connect(database)
     .then(connection => {
     // console.log(connection.connections);
@@ -45,6 +46,11 @@ process.on('uncaughtException', err => {
 
 // MIDDLEWARES
 app.use(express.json());
+
+app.use(cors({
+    credentials: true,
+    origin: ['http://127.0.0.1:3000', 'http://localhost:3001'] // [server-adresa, production-adresa]
+}));
 
 // ROUTES
 const listRouter = require('./routes/listRoutes');
