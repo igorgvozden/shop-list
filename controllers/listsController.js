@@ -6,7 +6,7 @@ const getShoppingLists = async() => {
     try {
         const lists = await List.find()
             .populate({ path: 'shop' })
-            .populate({ path: 'items' });
+            .populate({ path: 'items', populate: { path: 'category', model: 'Category' } });
 
         return {
             lists
@@ -20,7 +20,7 @@ const getList = async () => {
     try {
         const shoppingList = await List.find({name: 'List'})
             .populate({ path: 'shop' })
-            .populate({ path: 'items', populate: { path: 'category', model: 'Category' } })
+            .populate({ path: 'items', populate: { path: 'category', model: 'Category' } });
 
         return {
             shoppingList
